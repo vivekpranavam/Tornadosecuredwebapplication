@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html >
+  <head>
+    <meta charset="UTF-8">
+    <title>Login Form</title>
+<link rel="stylesheet" href="static/css/style.css">	
+  </head>
+
+  <body>
+
+<div class="login">
+  <div class="login-header">
+    <h1>Login</h1>
+  </div>
+  <div class="login-form">
+  <form action="/home" method="POST">
+    <h3>Username:</h3>
+    <input type="text" name="name"/><br>
+    <h3>Password:</h3>
+    <input type="password" name="password"/>
+    <br>
+    <input type="submit" value="login">
+    <br>	
+    <br>    
+	</form>	
+	<form action="/signup" method="GET">
+    <input type="submit" value="SignUp"/>
+	</form>	
+  </div>
+</div>    
+  </body>
+</html>
