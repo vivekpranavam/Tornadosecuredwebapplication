@@ -5,6 +5,7 @@ import sqlite3
 import tornado.template
 import os
 import sqlite3 as lite
+import time
 
 def CreateDB():
     con = lite.connect('db.db')
@@ -18,7 +19,9 @@ def CreateDB():
             cur.execute("CREATE TABLE user(userid varchar(10),username varchar(20), password varchar(20),age integer)")
             con.commit()        
         return x       
-
+class MainHandler(tornado.web.RequestHandler):
+        def get(self):
+                return self.redirect('/login')
 class LoginHandler(tornado.web.RequestHandler):
         def get(self):
                 return self.render('index.html')
@@ -78,7 +81,7 @@ class DOMprevent(tornado.web.RequestHandler):
                         
 BASE_DIR = os.path.dirname(os.path.realpath(__file__))
 settings = {
-            "debug": True,
+            "debug": False,
             "template_path": os.path.join(BASE_DIR, "templates"),
             "static_path": os.path.join(BASE_DIR, "static")
         }  
@@ -92,7 +95,8 @@ class Sqlihandler(tornado.web.RequestHandler):
         #self.write(userid)        
         con=lite.connect('db.db')
         with con:
-            cur=con.cursor()
+            con.create_function("sleep", 1, time.sleep)
+            cur=con.cursor()            
             cmd="select userid,username from user where userid= ?"           
             x=cur.execute(cmd,(userid,))
             self.write('<html><body><table style="width:25%"><tr><td>USERID</td><td>USERNAME</td></tr>'
@@ -106,7 +110,7 @@ class Sqlihandler(tornado.web.RequestHandler):
                         
                         
 def make_app():
-        return tornado.web.Application([(r"/login", LoginHandler),(r"/home", HomeHandler),(r"/signup",SignupHandler),(r"/prevent",DOMprevent),
+        return tornado.web.Application([(r"/login", LoginHandler),(r"/", MainHandler),(r"/home", HomeHandler),(r"/signup",SignupHandler),(r"/prevent",DOMprevent),
             (r"/list",ListuserHandler),(r"/sqli",Sqlihandler),(r"/SQLiload",SQLiLoadHandler)],**settings)
         
 if __name__ == "__main__":
